@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig'%}
+
+{% block title %}Inscription d'un nouvel utilisateur{% endblock %}
+
+{% block breadcrumb %}
+    <li class="list-inline-item seprate"><span>/</span></li>
+    <li class="list-inline-item"><a href="{{path('admin_users')}}">Tableau de bord</a></li>
+    <li class="list-inline-item seprate"><span>/</span></li>
+    <li class="list-inline-item">Inscription d'un nouvel utilisateur</li>
+{% endblock %}
+
+{% block pageName %}Inscription d'un nouvel utilisateur{% endblock %}
+{% block body %}
+    
+        <div class="container">
+            <div class="login-wrap mb-5">
+                <div class="login-content">
+                    <div class="login-form">       
+                        {{ form_start(form) }}
+                        {{ form_row(form.username, {
+                            'attr': {'placeholder': "Nom de l'utilisateur"}
+                            }) }}
+                        {{ form_row(form.email, {
+                            'attr': {'placeholder': "Adresse mail de l'utilisateur"}
+                            }) }}
+                        {{ form_row(form.password, {
+                            'attr': {'placeholder': "Mot de passe de l'utilisateur"}
+                            }) }}
+                        {{ form_row(form.confirm_password, {
+                            'attr': {'placeholder': "Tapez à nouveau le mot de passe"}
+                            }) }}
+                        {{ form_row(form.lastname, {
+                            'attr': {'placeholder': "Nom de famille de l'utilisateur"}
+                            }) }}
+                        {{ form_row(form.firstname, {
+                            'attr': {'placeholder': "Prénom de l'utilisateur"}
+                            }) }}
+                        {{ form_row(form.address, {
+                            'attr': {'placeholder': "Adresse de l'utilisateur"}
+                            }) }}
+                        {{ form_row(form.cp, {
+                            'attr': {'placeholder': "Code postal"}
+                            }) }}
+                        {{ form_row(form.town, {
+                            'attr': {'placeholder': "Ville"}
+                            }) }}
+                        {{ form_row(form.phone, {
+                            'attr': {'placeholder': "Numéro de téléphone de l'utilisateur"}
+                            }) }}
+                        {#{{ form_row(form.salt, {
+                            'label': "Salt :",
+                            'attr': {'value': 'AAAAAAAA'}
+                        }) }}
+                        {{ form_row(form.solde, {
+                            'label': "Solde en € :",
+                            'attr': {'value': 0}
+                        }) }}
+                        {{ form_row(form.roles, {
+                            'label': "Rôle :",
+                            'attr': {'value': "ROLE_USER"}
+                        }) }}#}
+                        <button type="submit" class="au-btn au-btn--block au-btn--green m-b-20">Enregistrer l'utilisateur</button>
+                        {{ form_end(form) }}
+                    </div>
+                    {% if is_granted ('ROLE_ADMIN') %}
+                    <div>
+                        <a href="{{ path('admin_users')}}"><i class="zmdi zmdi-arrow-left mr-2" style="font-size:1.5em;"></i> Retour au tableau de bord</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    
+{% endblock %}

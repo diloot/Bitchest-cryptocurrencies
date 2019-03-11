@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block pageName %}Accueil{% endblock %}
+{% block body %}
+    <!-- STATISTIC-->
+        <section class="statistic px-5 mt-0 pt-1">
+            <h3 class="text-uppercase mb-3">Cours des cryptomonnaies</h3>
+            <div class="row">
+            <!--CRYPTOS - CARTS-->
+                {% for crypto in cryptos %}
+                    <div class="col-6 col-sm-3">
+                        <a href="{{path('crypto_one', {'id':crypto.id})}}">
+                            <div class="overview-item overview-item--c{{crypto.id | slice(2, 1)}}">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix"> 
+                                        <div class="text text-white">
+                                            <h4>{{crypto.name}}</h4>
+                                            <p class="h2">{% for cotation in crypto.cotations %}
+                                                {% if loop.index is same as (30) %}
+                                                        {{cotation.value  | number_format(2, ',', '')}} <span>euros</span>
+                                                    <div class="chart-info__right pb-3">
+                                                        <div class="chart-statis">
+                                                        {% if cotation.cours > 0 %}
+                                                            <span>+{{cotation.cours  | number_format(2, ',', '')}} %</span>
+                                                            <span class="label"><i class="zmdi zmdi-long-arrow-up"></i>hausse</span>
+                                                        {% elseif  cotation.cours < 0 %}
+                                                            <span>{{cotation.cours | number_format(2, ',', '')}} %</span>
+                                                            <span class="label"><i class="zmdi zmdi-long-arrow-down"></i>baisse</span>
+                                                        {% else %}
+                                                            <span class="index incre">0 %</span>
+                                                        {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>             
+                {% endfor %}
+            <!--END CRYPTOS - CARTS-->
+            <!--DOUGHNUT-->               
+                <div class="col-lg-6 mr-0 mb-2">
+                    <div class="au-card">
+                        <h3 class="title-2">Comparatif valeurs du jour en euros</h3>
+                        <div class="row no-gutters">
+                            <div class="col-xl-3">
+                                <div class="chart-note-wrap">
+                                {% for crypto in cryptos %}
+                                    <div class="chart-note mr-0 d-block">
+                                        <span class="dot dot--{{crypto.Id}}"></span>
+                                        <a href="{{path('crypto_one', {'id':crypto.id})}}">
+                                        <span>{{crypto.name}}</span>
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-xl-9">
+                                <div class="percent-chart">
+                                    <canvas id="percent-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!--END DOUGHNUT-->
+            </div>
+        </section>
+    <!-- END STATISTIC-->
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        (function ($) {
+        // USE STRICT
+        "use strict";
+            try {
+// Percent Chart DOUGHNUT
+                var ctx = document.getElementById("percent-chart");
+                if (ctx) {
+                ctx.height = 280;
+                var myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                    datasets: [
+                        {
+                        label: "Crypto",
+                        data: [
+                            {% for crypto in cryptos %}
+                                {% for cotation in crypto.cotations %}
+                                    {% if loop.index is same as (30) %}
+                                        {{cotation.value}},
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        ],
+                        backgroundColor: [
+                            '#38ef7d',
+                            '#b8fc4b',
+                            '#dce35b',
+                            '#ff6a00',
+                            '#fa4251',
+                            '#ee0979',
+                            '#5a628a',
+                            '#3f5efb',
+                            '#11998e',
+                            '#68ecc4'
+                        ],
+                        hoverBackgroundColor: [
+                            '#38ef7d',
+                            '#b8fc4b',
+                            '#dce35b',
+                            '#ff6a00',
+                            '#fa4251',
+                            '#ee0979',
+                            '#5a628a',
+                            '#3f5efb',
+                            '#11998e',
+                            '#68ecc4'
+                        ],
+                        borderWidth: [
+                        ],
+                        hoverBorderColor: [
+                            '#38ef7d',
+                            '#b8fc4b',
+                            '#dce35b',
+                            '#ff6a00',
+                            '#fa4251',
+                            '#ee0979',
+                            '#5a628a',
+                            '#3f5efb',
+                            '#11998e',
+                            '#68ecc4'
+                        ]
+                        }
+                    ],
+                    labels: [
+                        {% for crypto in cryptos %}
+                        '{{crypto.name}}',
+                        {% endfor %}
+                    ]
+                    },
+                    options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    cutoutPercentage: 55,
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        titleFontFamily: "Poppins",
+                        xPadding: 15,
+                        yPadding: 10,
+                        caretPadding: 0,
+                        bodyFontSize: 16
+                    }
+                    }
+                });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+        })(jQuery);
+    </script>  
+{% endblock %}

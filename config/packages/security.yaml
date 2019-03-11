@@ -1,0 +1,61 @@
+security:
+    encoders:
+        #Symfony\Component\Security\Core\User\User: bcrypt
+        App\Entity\User:
+            # bcrypt or argon2i are recommended
+            # argon2i is more secure, but requires PHP 7.2 or the Sodium extension
+            algorithm: bcrypt
+            cost: 12
+            
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        #in_memory: { memory: ~ }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+        #in_memory:
+            #memory:
+                #users:
+                    #jerome@bitchest.com:
+                        #password: '$2y$12$OXyjmuzhiIKWksD2eMaHPei4VQlEYTgJYIsEyR7uz3FIISJ5z63Jq'
+                        #roles: 'ROLE_ADMIN'
+                    #fake-user0@gmail.com:
+                        #password: 123456
+                        #roles: 'ROLE_USER'
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            #provider: app_user_provider
+
+            # activate different ways to authenticate
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+            guard:
+               authenticators:
+                   - App\Security\LoginFormAuthenticator
+
+            form_login:
+                login_path: login
+                check_path: login_check
+
+            logout:
+                path: security_logout
+                target: crypto_home
+
+            # https://symfony.com/doc/current/security/form_login_setup.html
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+    #    - { path: ^/profile, roles: ROLE_USER }
+    #    - { path: ^/user, roles: ROLE_USER }

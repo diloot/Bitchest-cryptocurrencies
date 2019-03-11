@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme creditForm 'bootstrap_4_layout.html.twig'%}
+
+{% block title %} {{parent()}} Créditer son compte {% endblock %}
+
+{% block breadcrumb %}
+    <li class="list-inline-item seprate"><span>/</span></li>
+    <li class="list-inline-item">Créditer mon compte</li>
+{% endblock %}
+
+{% block pageName %} Créditer le compte de {{app.user.username}}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="login-wrap mb-5">
+            <div class="login-content">
+                <div class="login-form ">    
+                    {{form_start(creditForm)}}
+                    <p class="text-succes">Votre solde actuel est de {{app.user.solde | number_format(2, ',', '')}} €</p>
+                    {{form_widget(creditForm)}}
+                    <p class="text-danger">La différence de montant sera directement prélevée sur votre compte 12xxxxx50 BNP. </br><a href="#">Modifier mes moyens de paiements.</a></p>
+                    <button type="submit" class="au-btn au-btn--block au-btn--green m-b-20 mt-2">Créditer mon solde</button>
+                    {{form_end(creditForm)}}
+
+                    <!--
+                    <form action="{#{{path('add_to_solde',{'id':app.user.id})}}#}" method="post" class="mb-5">
+                        <div class="form-group">
+                            <label for="creditSolde">Créditer le compte en euros de :</label>
+                            <input class="au-input au-input--full" type="text" name="creditSolde" placeholder="Quantité d'euros à prélever sur votre compte banquaire">
+                        </div>
+                        <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Créditer</button>
+                    </form>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

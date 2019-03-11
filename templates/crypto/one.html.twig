@@ -1,0 +1,325 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} {{crypto.name}} {% endblock %}
+{% block stylesheets %}{{parent()}}{% endblock %}
+{% block breadcrumb %}
+    <li class="list-inline-item seprate"><span>/</span></li>
+    <li class="list-inline-item"><a href="/">Cours cryptomonnaies</a></li>
+    <li class="list-inline-item seprate"><span>/</span></li>
+    <li class="list-inline-item">{{crypto.name}}</li>
+{% endblock %}
+
+{% block pageName %} <img src="images/{{crypto.image}}" alt="Logo cryptomonnaie."> {{crypto.name}} - évolution {% endblock %}
+
+{% block body %}
+    <!-- STATISTIC-->
+    <section class="statistic px-5 mt-0 pt-0">
+            <h3 class="text-uppercase">Valeur : {{crypto.name}}</h3>
+            <div class="row m-t-25">
+                <div class="col-lg-3"><!--col left--> 
+                    <!--CRYPTO - WEEK CART-->  
+                    <div class="overview-item overview-item--c{{crypto.id  | slice(2, 1)}} mb-2">
+                        <div class="overview__inner">
+                            <div class="overview-box clearfix"> 
+                                <div class="text text-white">
+                                    <h4>{{crypto.name}}</h4>
+                                    <p class="h2">
+                                        {% for cotation in crypto.cotations %}
+                                            {% if loop.index is same as (30) %}
+                                                {{cotation.value  | number_format(2, ',', '')}} <span>euros</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="overview-chart">
+                                <canvas id="weekChartColor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END CRYPTO - WEEK CART-->
+                    <!--BUYING FORM--> 
+                        <form action="{{path('crypto_buy')}}" method="post">
+
+                            <label for="amount_crypto">Quantité de {{crypto.name}} :<br>
+                            <small>Veuillez taper un nombre supérieur à 0.</small></label>
+                            <input type="text" name="amount_crypto" class="form-control" placeholder="Quantité désirée" onchange="javascript:total(this.value, document.getElementById('cours').value);" onkeyup="javascript:total(this.value, document.getElementById('cours').value);" >
+                            <small id="error" class="text-danger"></small>
+                            <p>X 
+                            {% for cotation in crypto.cotations %}
+                                {% if loop.index is same as (30) %}
+                                {{cotation.value  | number_format(2, ',', '')}}
+                                <input type="hidden" name="cours" id="cours" value="{{cotation.value}}">
+                                {% endif %}
+                            {% endfor %}
+                            <small>(Valeur actuelle en euros.)</small></p>
+                             
+                            <label for="amount">Total en euros : </label><br>
+                            <input type="number" name="amount" id="amount" readonly class="form-control">
+                            
+                            {% if app.user %}
+                                <p class="text-success">Vous disposez de {{app.user.solde  | number_format(2, ',', '')}} €.</p>
+                                <p> <small>Si la somme est insuffisante : <a href="{{path('increase_solde', {'id': app.user.id})}}">Augmenter mon crédit</a>.</small> </p>
+                                <input type="hidden" name="type" id="type" value="1">
+                                <input type="hidden" name="crypto" id="crypto" value="{{crypto.id}}">
+                                <input type="hidden" name="user" id="user" value="{{app.user.id}}">
+                                <button type="submit" class="au-btn au-btn-icon au-btn--green my-3">Acheter</button>
+                            {% else %}
+
+                            <p><small>Veuillez  <a href="{{path('login')}}">vous connecter</a> pour acheter. </br>
+                            Pas encore inscrit ?  <a href="{{path('security_registration')}}">S'enregistrer</a>.</small>
+                            </p>
+                            <button type="button" class="btn btn-outline-success my-3" disabled>Acheter</button>
+                            {% endif %}
+                        </form>           
+                    
+                    <!--END BUYING FORM-->
+                </div><!--/col left--> 
+                <!-- MONTH CHART-->
+                <div class="col-lg-9">
+                    <div class="au-card recent-report">
+                        <div class="au-card-inner">
+                            <h3 class="title-2">progression sur 30 jours</h3>
+                            <div class="chart-info">
+                                <div class="chart-info__left">
+                                    <div class="chart-note">
+                                        <span class="dot dot--1"></span>
+                                        <span>valeur {{crypto.name}} en euros</span>
+                                    </div>
+                                </div>
+                                    
+                                <div class="chart-info__right">
+                                    {% for cotation in crypto.cotations %}
+                                        {% if loop.index is same as (30) %}
+                                            <div class="chart-statis">
+                                                {% if cotation.cours > 0 %}
+                                                    <span class="index incre">
+                                                    <i class="zmdi zmdi-long-arrow-up"></i>
+                                                    + {{cotation.cours  | number_format(2, ',', '')}} %</span>
+                                                    <span class="label">hausse</span>
+                                                {% elseif  cotation.cours < 0 %}
+                                                    <span class="index decre">
+                                                    <i class="zmdi zmdi-long-arrow-down"></i>
+                                                    {{cotation.cours  | number_format(2, ',', '')}} %</span>
+                                                    <span class="label">baisse</span>
+                                                {% else %}
+                                                    <span class="index incre">0 %</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                                <div class="recent-report__chart">
+                                    <canvas id="monthChart"></canvas>
+                                </div>                                     
+                            </div>
+                            {# <div> <!--test data -->
+                            <table>
+                            <tr><td>Cours</td><td>Date</td></tr>
+                            {% for cotation in crypto.cotations %}
+                            <tr><td>{{ cotation.cours}}</td><td>{{ cotation.date | date('d/m')}}</td></tr>
+                            {% endfor %}
+                            </table>
+                            </div> #}
+                        </div>
+                    </div>
+                <!--END MONTH CHART-->
+            </div>
+    </section>
+    <!-- END STATISTIC-->
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+//calcul BUYING FORM
+    function total(nb1, nb2) { 
+        if (isNaN(nb1) || nb1<=0){
+            result = 0;
+            document.getElementById('error').innerHTML = "Le nombre doit être de type : 10.02."; 
+        }else{
+            result = (nb1*nb2).toFixed(2);
+            document.getElementById('error').innerHTML = "";  
+        }
+        document.getElementById('amount').value = result; 
+    }
+//JQUERY
+    (function ($) {
+        // USE STRICT
+        "use strict";
+        try {
+//weekChartColor
+               var ctx = document.getElementById("weekChartColor");
+                if (ctx) {
+                ctx.height = 130;
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                    labels: [{% for cotation in crypto.cotations %}
+                                {% if (loop.index >23 and loop.index <31 ) %}
+                                '{{ cotation.date | date ('d-m')}}',
+                                {% endif %}
+                                {% endfor %}],
+                    type: 'line',
+                    datasets: [{
+                        data: [{% for cotation in crypto.cotations %}
+                                {% if (loop.index >23 and loop.index <31 ) %}
+                                {{ cotation.value}},
+                                {% endif %}
+                                {% endfor %}],
+                        label: 'Valeur',
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgba(255,255,255,.55)',
+                    },]
+                    },
+                    options: {
+
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    responsive: true,
+                    tooltips: {
+                        mode: 'index',
+                        titleFontSize: 12,
+                        titleFontColor: '#000',
+                        bodyFontColor: '#000',
+                        backgroundColor: '#fff',
+                        titleFontFamily: 'Montserrat',
+                        bodyFontFamily: 'Montserrat',
+                        cornerRadius: 3,
+                        intersect: false,
+                    },
+                    scales: {
+                        xAxes: [{
+                        gridLines: {
+                            color: 'transparent',
+                            zeroLineColor: 'transparent'
+                        },
+                        ticks: {
+                            fontSize: 2,
+                            fontColor: 'transparent'
+                        }
+                        }],
+                        yAxes: [{
+                        display: false,
+                        ticks: {
+                            display: false,
+                        }
+                        }]
+                    },
+                    title: {
+                        display: false,
+                    },
+                    elements: {
+                        line: {
+                        tension: 0.00001,
+                        borderWidth: 1
+                        },
+                        point: {
+                        radius: 4,
+                        hitRadius: 10,
+                        hoverRadius: 4
+                        }
+                    }
+                    }
+                });
+                }
+        } catch (error) {
+            console.log(error);
+        }
+
+        try {
+// monthChart  
+        const bdcrypto = '#38ef7d'
+        const bgcrypto = '#38ef7d5c'
+        //const bdcrypto2 = 'rgba(0,181,233,0.2)'
+        //const bgcrypto2 = 'rgba(0,173,95,0.2)'
+        var data = [{% for cotation in crypto.cotations %}
+                    {{ cotation.value}},
+                    {% endfor %}]
+        //var data2 = [102, 70, 80, 100, 56, 53, 80, 75, 65, 90]
+    
+        var ctx = document.getElementById("monthChart");
+        if (ctx) {
+          ctx.height = 230;
+          var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: [{% for cotation in crypto.cotations %}
+                    '{{ cotation.date | date('d/m')}}',
+                    {% endfor %}
+                      ],
+              datasets: [
+                {
+                  label: 'valeur',
+                  backgroundColor: bgcrypto,
+                  borderColor: bdcrypto,
+                  pointHoverBackgroundColor: '#fff',
+                  borderWidth: 0,
+                  data: data
+                }/*,
+                {
+                  label: 'My Second dataset',
+                  backgroundColor: bgcrypto2,
+                  borderColor: bdcrypto2,
+                  pointHoverBackgroundColor: '#fff',
+                  borderWidth: 0,
+                  data: data2
+                }*/
+              ]
+            },
+            options: {
+              maintainAspectRatio: true,
+              legend: {
+                display: false
+              },
+              responsive: true,
+              scales: {
+                xAxes: [{
+                  gridLines: {
+                    drawOnChartArea: true,
+                    color: '#f2f2f2'
+                  },
+                  ticks: {
+                    fontFamily: "Poppins",
+                    fontSize: 12
+                  }
+                }],
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true,
+                    maxTicksLimit: 5,
+                    stepSize: 50,
+                    max: 150,
+                    fontFamily: "Poppins",
+                    fontSize: 12
+                  },
+                  gridLines: {
+                    display: true,
+                    color: '#f2f2f2'
+    
+                  }
+                }]
+              },
+              elements: {
+                point: {
+                  radius: 0,
+                  hitRadius: 10,
+                  hoverRadius: 4,
+                  hoverBorderWidth: 3
+                },
+                line: {
+                  tension: 0
+                }
+              }
+            }
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+    })(jQuery);
+</script>
+{% endblock %}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{% block title %}Bitchest - achat et vente de cryptomonnaie{% endblock %}</title>
+        <meta name="description" content="Site fictif pour acheter des cryptomonnaies.">
+        <meta name="keywords" content="Bitchest, cryptomonnaie, achat, vente">
+        <meta name="author" content="Diane Superbie 2019">
+
+        <!-- link to favicon -->
+        <link rel="icon" type="image/x-icon" href="/images/bitchest_favicone.png">
+        {% block stylesheets %}
+            <!-- CDN :
+            Google font 
+            <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Candal|Fugaz+One|Russo+One|Sigmar+One|Special+Elite|ZCOOL+QingKe+HuangYou" rel="stylesheet">
+
+            Bootstrap Core CSS 
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+            Fontawesome
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+            -->
+            <!-- Fontfaces CSS-->
+            <link href="/css/font-face.css" rel="stylesheet" media="all">
+            <!--<link href="/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">-->
+            <link href="/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
+            <link href="/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+            <!-- Bootstrap CSS-->
+            <link href="/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
+            <!-- Vendor CSS-->
+            <link href="/vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
+            <link href="/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
+            <!--aside nav-->
+            <link href="/vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
+ <!--       <link href="/vendor/slick/slick.css" rel="stylesheet" media="all">
+            <link href="/vendor/select2/select2.min.css" rel="stylesheet" media="all">
+            <link href="/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
+            <link href="/vendor/wow/animate.css" rel="stylesheet" media="all">
+            <link href="/vendor/vector-map/jqvmap.min.css" rel="stylesheet" media="all">-->
+
+            <!-- Main CSS-->
+            <link href="css/theme.css" rel="stylesheet" media="all">
+            <!-- ENCORE css -->
+            {# 'app' must match the first argument to addEntry() in webpack.config.js #}
+            {# {{ encore_entry_link_tags('app') }} #}
+            <!-- Renders a link tag (if your module requires any CSS)
+            <link rel="stylesheet" href="/build/app.css"> -->
+        {% endblock %}
+    </head>
+
+    <body class="animsition">
+    <div class="page-wrapper">
+<!-- MENU MOBILE-->
+        <header class="header-mobile d-block d-lg-none">
+            <!--BRAND MOBILE-->
+            <div class="header-mobile__bar pt-0 bg-secondary">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="/">
+                            <img src="images/bitchest_logo.png" alt="Logo Bitchest." />
+                        </a>
+                        <button class="hamburger hamburger--slider bg-secondary" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--BURGER NAV-->
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="navbar-mobile__list list-unstyled">
+                        <li><a href="/"><i class="fas fa-home mr-2"></i>Accueil</a>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#"><i class="fas fa-chart-bar mr-2"></i>Cours cryptomonnaies<span class="arrow ml-2"><i class="fas fa-angle-down"></i></span></a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li><a href="{{path('crypto_one', {'id':1})}}"><i class="fas fa-arrow-right mr-2"></i>Bitcoin</a></li>
+                                <li><a href="{{path('crypto_one', {'id':2})}}"><i class="fas fa-arrow-right mr-2"></i>Bitcoin Cash</a></li>
+                                <li><a href="{{path('crypto_one', {'id':3})}}"><i class="fas fa-arrow-right mr-2"></i>Cardano</a></li>
+                                <li><a href="{{path('crypto_one', {'id':4})}}"><i class="fas fa-arrow-right mr-2"></i>Das</a></li>
+                                <li><a href="{{path('crypto_one', {'id':5})}}"><i class="fas fa-arrow-right mr-2"></i>Ethereum</a></li>
+                                <li><a href="{{path('crypto_one', {'id':6})}}"><i class="fas fa-arrow-right mr-2"></i>IOTA</a></li>
+                                <li><a href="{{path('crypto_one', {'id':7})}}"><i class="fas fa-arrow-right mr-2"></i>Litecoin</a></li>
+                                <li><a href="{{path('crypto_one', {'id':8})}}"><i class="fas fa-arrow-right mr-2"></i>NEM</a></li>
+                                <li><a href="{{path('crypto_one', {'id':9})}}"><i class="fas fa-arrow-right mr-2"></i>Ripple</a></li>
+                                <li><a href="{{path('crypto_one', {'id':10})}}"><i class="fas fa-arrow-right mr-2"></i>Stellar</a></li>
+                            </ul>
+                        </li>
+                        {% if app.user %}
+                        <li><a href="{{path('user_transactions_show', {'id':app.user.id, })}}"><i class="zmdi zmdi-balance-wallet mr-2"></i>Portefeuille</a></li>
+                        {% endif %}
+                        {% if is_granted ('ROLE_ADMIN') %}
+                        <li><a href="{{path('admin_users')}}"><i class="fas fa-user-plus mr-2"></i>Tableau utilisateurs</a></li>
+                        <li><a href="{{path('admin_transactions_show')}}"><i class="fas fa-book mr-2"></i>Transactions utilisateurs</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </header>
+<!-- END MENU MOBILE-->
+
+<!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block">
+            <!--BRAND LOGO PC-->
+            {% if is_granted ('ROLE_ADMIN') %}
+            <div class="logo">
+                <a href="/"><img src="images/bitchest_logo-white.png" alt="Logo Bitchest." /></a>
+            </div>
+            {% else %}
+            <div class="logo">
+                <a href="/"><img src="images/bitchest_logo.png" alt="Logo Bitchest." /></a>
+            </div>
+            {% endif %}
+            <!--NAV PC-->
+            <div class="menu-sidebar__content js-scrollbar1">
+                <nav class="navbar-sidebar2">
+                    <ul class="list-unstyled navbar__list">
+                        
+                        <li><a href="/"><i class="fas fa-home mr-2"></i>Accueil</a>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#"><i class="fas fa-chart-bar mr-2"></i>Cours cryptomonnaies<span class="arrow"><i class="fas fa-angle-down"></i></span></a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li><a href="{{path('crypto_one', {'id':1})}}"><i class="fas fa-arrow-right mr-2"></i>Bitcoin</a></li>
+                                <li><a href="{{path('crypto_one', {'id':2})}}"><i class="fas fa-arrow-right mr-2"></i>Bitcoin Cash</a></li>
+                                <li><a href="{{path('crypto_one', {'id':3})}}"><i class="fas fa-arrow-right mr-2"></i>Cardano</a></li>
+                                <li><a href="{{path('crypto_one', {'id':4})}}"><i class="fas fa-arrow-right mr-2"></i>Das</a></li>
+                                <li><a href="{{path('crypto_one', {'id':5})}}"><i class="fas fa-arrow-right mr-2"></i>Ethereum</a></li>
+                                <li><a href="{{path('crypto_one', {'id':6})}}"><i class="fas fa-arrow-right mr-2"></i>IOTA</a></li>
+                                <li><a href="{{path('crypto_one', {'id':7})}}"><i class="fas fa-arrow-right mr-2"></i>Litecoin</a></li>
+                                <li><a href="{{path('crypto_one', {'id':8})}}"><i class="fas fa-arrow-right mr-2"></i>NEM</a></li>
+                                <li><a href="{{path('crypto_one', {'id':9})}}"><i class="fas fa-arrow-right mr-2"></i>Ripple</a></li>
+                                <li><a href="{{path('crypto_one', {'id':10})}}"><i class="fas fa-arrow-right mr-2"></i>Stellar</a></li>
+                            </ul>
+                        </li>
+                        {% if app.user %}
+                        <li><a href="{{path('user_transactions_show', {'id':app.user.id})}}"><i class="zmdi zmdi-balance-wallet mr-2"></i>Portefeuille</a></li>
+                        {% endif %}
+                        {% if is_granted ('ROLE_ADMIN') %}
+                        <li><a href="{{path('admin_users')}}"><i class="fas fa-user-plus mr-2"></i>Tableau utilisateurs</a></li>
+                        <li><a href="{{path('admin_transactions_show')}}"><i class="fas fa-book mr-2"></i>Transactions utilisateurs</a></li>
+                         {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+<!-- END MENU SIDEBAR-->               
+<!-- END NAV -->
+
+<!-- PAGE CONTAINER-->
+        <div class="page-container">
+        {% if is_granted ('ROLE_ADMIN') %}
+            <header class="header-desktop bg-success">
+        {% else %}
+            <header class="header-desktop bg-dark">
+        {% endif %}
+        <!-- HEADER CONNEXION-->
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            <h1 class="text-secondary">Achat et vente de cryptomonnaies</h1>
+                            
+                            <div class="header-button">
+                            {% if not app.user %}
+                                <div class="image px-2">
+                                    <i class="zmdi zmdi-power"></i>
+                                </div>
+                                <div class="content">
+                                    <a href="{{path('login')}}">Connexion</a>
+                                </div>
+                            {% else %}<!--top solde-->
+                                <div class="noti-wrap">
+                                    <div class="noti__item js-item-menu text-white">
+                                        <i class="zmdi zmdi-balance-wallet"></i>
+                                        <p>Solde : {{app.user.solde  | number_format(2, ',', '')}} €</p>
+                                        <div class="notifi-dropdown js-dropdown">
+                                            <div class="notifi__title">
+                                                <p>Votre portefeuille</p>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c1 img-cir img-40">
+                                                    <i class="zmdi zmdi-email-open"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>Solde en euros : {{app.user.solde | number_format(2, ',', '')}} €</p>
+                                                    <span class="date">{{"now"| date('d/m/Y')}}</span>
+                                                    <a href="{{path('increase_solde', {'id': app.user.id})}}">Augmenter mon crédit</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!--end top solde-->
+                                <div class="account-wrap">
+                                    <div class="account-item clearfix js-item-menu">
+                                        <!--user-->
+                                        <div class="image pl-1">
+                                            <i class="zmdi zmdi-account-circle" style="font-size:40px;"></i>
+                                        </div>
+                                        <div class="content">
+                                            <a class="js-acc-btn text-white" href="#">{{app.user.username}}</a>
+                                        </div>
+
+                                        <!--menu user dropdown-->
+                                        <nav class="account-dropdown js-dropdown">
+                                            <div class="info clearfix">
+                                                <div class="image">
+                                                    {% if is_granted ('ROLE_ADMIN') %}
+                                                    <img src="images/avatar-01.jpg" alt="Avatar de profile admin." />
+                                                    {% else %}
+                                                    <img src="images/avatar-02.jpg" alt="Avatar de profile utilisateur." />
+                                                    {% endif %}
+                                                </div>
+                                                <div class="content">
+                                                    <h1 class="name h5">{{app.user.firstname}} {{app.user.lastname}}</h1>
+                                                    <span class="email">{{app.user.email}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="{{ path('user_show', {'id': app.user.id})}}">
+                                                        <i class="zmdi zmdi-account"></i>Voir mon compte</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="{{ path('user_edit', {'id': app.user.id})}}">
+                                                        <i class="zmdi zmdi-settings"></i>Modifier mon compte</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="{{path('increase_solde', {'id': app.user.id})}}"><i class="zmdi zmdi-long-arrow-up"></i>Augmenter mon crédit</a>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="{{path('security_logout')}}"><i class="zmdi zmdi-power"></i>Déconnexion</a>
+                                            </div>
+                                            <!--end menu user-->
+                                        </nav>
+                                    </div>
+                                </div>
+                                <!--end connexion-->
+                            {% endif %}
+                            </div>
+                            <!--end buttons right-->
+                        </div>
+                    </div>
+                </div>
+            </header>
+        <!-- END HEADER CONNEXION-->
+
+        <!-- BREADCRUMB-->
+            <section class="au-breadcrumb m-t-75">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="au-breadcrumb-content">
+                                    <div class="au-breadcrumb-left">
+                                        <ul class="list-unstyled list-inline au-breadcrumb__list">
+                                            <li class="list-inline-item">
+                                                <a href="/">Accueil</a>
+                                            </li>
+                                            {% block breadcrumb %}
+                                            {% endblock %}
+                                        </ul>
+                                    </div>
+                                    <div>
+                                    <span class="date">{{"now"| date('d/m/Y')}}</span>
+                                    </div>
+                                    {% block addUser %}{% endblock %}                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <!-- END BREADCRUMB-->
+        <!--TITLE PAGE VARIABLE-->           
+            <h2 class="text-center pt-3">{% block pageName %}{% endblock %}</h2>
+        <!--FLASH MESSAGES-->            
+            <div class="row"><!--start flash messages-->
+                <div class="col-md-8 offset-md-2 my-3">
+                    
+                {% for message in app.flashes('error') %}
+                    <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+                {% for message in app.flashes('warning') %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endfor %}
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+                {% for message in app.flashes('info') %}
+                    <div class="alert alert-info">{{ message }}</div>
+                {% endfor %}
+                
+                </div>
+            </div><!--end flash messages-->             
+        <!--END FLASH MESSAGES-->   
+
+<!-- PAGE CONTENT -->
+        {% block body %} 
+        {% endblock %} 
+<!-- END PAGE CONTENT -->
+<!-- FOOTER-->            
+           <footer class="d-sm-flex justify-content-sm-around bg-dark text-secondary">       
+                <a href="/"><img src="/images/bitchest_logo.png" alt="Logo du site Bitchest." class="img-fluid" style="max-width:200px;"></a>
+                <div>
+                    <address class="pt-2"><i class="fas fa-envelope mr-2"></i>100 rue de la Paix • 75002 Paris <br><a href="mailto:contact@bitchest.com"></i>contact@bitchest.com</a></address> 
+                </div>
+                <div>
+                    <ul class="list-unstyled pt-2">
+                        <li><a href="#" class="small">Mentions légales</a></li>
+                        <li><a href="#" class="small">Tarifs et conditions</a></li>
+                    </ul>  
+                    <small class="pt-5"><i class="fas fa-key mr-2"></i>Site sécurisé<br/> © 2019 Bitchest X Diane Superbie </small>
+                </div>   
+            </footer> <!--END FOOTER-->
+        </div> <!-- END PAGE CONTAINER-->
+    </div><!-- END PAGE WRAPPER-->      
+<!--JAVASCRYPT-->        
+            <!-- CDN :
+                jQuery
+                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+                Bootstrap Core JavaScript
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+            -->   
+            <!-- JQuery-->
+            <script src="vendor/jquery-3.2.1.min.js"></script>
+            <!-- Bootstrap JS-->
+            <script src="vendor/bootstrap-4.1/popper.min.js"></script>
+            <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+            <!-- Vendor JS -->
+
+            <script src="vendor/animsition/animsition.min.js"></script>
+            <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+            <script src="vendor/chartjs/Chart.bundle.min.js"></script>
+            <!--<script src="vendor/slick/slick.min.js"></script>
+            <script src="vendor/wow/wow.min.js"></script>
+            <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+            <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
+            <script src="vendor/counter-up/jquery.counterup.min.js"></script>
+            <script src="vendor/circle-progress/circle-progress.min.js"></script>
+            <script src="vendor/select2/select2.min.js"></script>
+            <script src="vendor/vector-map/jquery.vmap.js"></script>
+            <script src="vendor/vector-map/jquery.vmap.min.js"></script>
+            <script src="vendor/vector-map/jquery.vmap.sampledata.js"></script>
+            <script src="vendor/vector-map/jquery.vmap.world.js"></script>-->
+            
+            <!-- Main JS-->
+            <script src="js/main.js"></script>
+            <!--ENCORE :
+            {#{{ encore_entry_script_tags('app') }}#}
+            Renders app.js & a webpack runtime.js file
+                <script src="/build/runtime.js"></script>
+                <script src="/build/app.js"></script> 
+            -->
+<!-- END JAVASCRYPT-->  
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

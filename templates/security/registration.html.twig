@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig'%}
+
+{% block title %}Inscription{% endblock %}
+
+{% block breadcrumb %}
+    <li class="list-inline-item seprate"><span>/</span></li>
+    <li class="list-inline-item">Inscription</li>
+{% endblock %}
+
+{% block pageName %}S'inscrire{% endblock %}
+{% block body %}
+    
+        <div class="container">
+            <div class="login-wrap">
+                <div class="login-content">
+                    <div class="login-form">       
+                        {{ form_start(form) }}
+                        {{ form_row(form.username, {
+                            'attr': {'placeholder': "Votre nom d'utilisateur"}
+                            }) }}
+                        {{ form_row(form.email, {
+                            'attr': {'placeholder': "Votre adresse mail"}
+                            }) }}
+                        {{ form_row(form.password, {
+                            'attr': {'placeholder': "Votre mot de passe"}
+                            }) }}
+                        {{ form_row(form.confirm_password, {
+                            'attr': {'placeholder': "Tapez à nouveau votre mot de passe"}
+                            }) }}
+                        {{ form_row(form.lastname, {
+                            'attr': {'placeholder': "Votre nom de famille"}
+                            }) }}
+                        {{ form_row(form.firstname, {
+                            'attr': {'placeholder': "Votre prénom"}
+                            }) }}
+                        {{ form_row(form.address, {
+                            'attr': {'placeholder': "Votre adresse"}
+                            }) }}
+                        {{ form_row(form.cp, {
+                            'attr': {'placeholder': "Votre code postal"}
+                            }) }}
+                        {{ form_row(form.town, {
+                            'attr': {'placeholder': "Votre ville"}
+                            }) }}
+                        {{ form_row(form.phone, {
+                            'attr': {'placeholder': "Votre numéro de téléphone"}
+                            }) }}
+                        {#{{ form_row(form.salt, {
+                            'label': "",
+                            'attr': {'value': 'AAAAAAAA', 
+                            'hidden': true}
+                        }) }}#}
+                        {#{{ form_row(form.solde, {
+                            'label': "",
+                            'attr': {'value': 0, 
+                            'hidden': true}
+                        }) }}#}
+                        {#{{ form_row(form.roles, {
+                            'label': "",
+                            'attr': {'value': "ROLE_USER", 
+                            'hidden': 'true'}
+                        }) }}#}
+                        <button type="submit" class="au-btn au-btn--block au-btn--green m-b-20">S'enregistrer</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+{% endblock %}

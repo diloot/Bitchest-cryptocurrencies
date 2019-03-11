@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{parent()}} Connexion{% endblock %}
+
+{% block breadcrumb %}
+    <li class="list-inline-item seprate"><span>/</span></li>
+    <li class="list-inline-item">Connexion</li>
+{% endblock %}
+
+{% block pageName %}Se connecter{% endblock %}
+
+{% block body %}
+    <div class="page-wrapper">
+        <div class="page-content--bge5">
+            <div class="container">
+                <div class="login-wrap">
+                    <div class="login-content">
+                        <div class="login-form">
+                            <form action="{{path('login_check')}}" method="post">
+                                {% if error %}
+                                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                {% endif %}
+                                <div class="form-group">
+                                    <label for="_username">Adresse email</label>
+                                    <input class="au-input au-input--full" type="text" name="_username" placeholder="Adresse email" required value="{{ last_username }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="_password">Mot de passe</label>
+                                    <input class="au-input au-input--full" type="password" name="_password" placeholder="Mot de passe" required>
+                                </div>
+                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Connexion</button>
+                            </form>
+                            
+                            <div class="text-center">
+                                <p>
+                                    Pas encore inscrit ?
+                                    <a href="{{path('security_registration')}}">S'enregistrer.</a> 
+                                </p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
