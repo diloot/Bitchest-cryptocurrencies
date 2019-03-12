@@ -2927,7 +2927,7 @@ section {
     background-image: -ms-linear-gradient(90deg, #45b649 0%, #dce35b 100%);
 }
 
-.overview-item--c5, .overview-item--c0 {
+.overview-item--c5, .overview-item--c0, .overview-item--c10  {
     background-image: -moz-linear-gradient(90deg, #5a628a 0%, #68ecc4 100%);
     background-image: -webkit-linear-gradient(90deg, #5a628a 0%, #68ecc4 100%);
     background-image: -ms-linear-gradient(90deg, #5a628a 0%, #68ecc4 100%);

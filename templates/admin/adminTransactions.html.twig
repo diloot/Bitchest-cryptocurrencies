@@ -35,7 +35,7 @@
                                        {% for transaction in transactions %}
                                         <tr>
                                             <td>
-                                                <div class="table-data__info">
+                                                <div class="table-data__info" title="{{transaction.date | date('à H:i:s')}}">
                                                     {{transaction.date | date('d/m/Y')}}
                                                 </div>
                                             </td>
@@ -65,7 +65,7 @@
                                             <td>
                                                 <div class="table-data__info">
                                                 {% if transaction.user %}
-                                                    {{transaction.user.username}}
+                                                    <a href="{{ path('user_show', {'id': transaction.user.id})}}">{{transaction.user.username}}</a>   
                                                 {% else %}
                                                     Utilisateur effacé
                                                 {% endif %}

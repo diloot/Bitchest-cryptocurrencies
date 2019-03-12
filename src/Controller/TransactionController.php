@@ -25,6 +25,7 @@ class TransactionController extends AbstractController
      */
     public function adminTransactionsShow(TransactionRepository $repo)
     {
+        //Find transactions by date (last transaction in first)
         $transactions = $repo->findByDateDesc();
 
         return $this->render('admin/adminTransactions.html.twig', [
@@ -41,24 +42,23 @@ class TransactionController extends AbstractController
     public function transactionsShow(User $user, CryptoRepository $cRepo, TransactionRepository $tRepo, WalletRepository $wRepo)
     {
         $cryptos = $cRepo->findAll();
-        //test : all transactions of user without order :
-        //$transactions = $user->getTransactions();
 
+        //test : all transactions of an user without order :
+        //$transactions = $user->getTransactions();
+        //Find all transactions of an user with cryptos sorted :
         $transactions = $tRepo->findByUserCryptos($user);
 
+        //test : all wallets of an user with cryptos sorted :
         //$wallets = $wRepo->findBy(['user' => $user],['crypto' => 'asc']);
-        
-        //Récupérer les cryptos de app.user. Fonction présente dans TransactionsRepository : 
+        //Find all wallets of an user with cryptos sorted (function in WalletRepository) :
         $wallets = $wRepo->findByUserCryptos($user);
 
-        
         return $this->render('wallet/userTransactions.html.twig', [
             'cryptos' => $cryptos,
             'transactions' => $transactions,
             'wallets'=> $wallets,
             'user'=> $user
-        ]);
-        
+        ]); 
     }//end userTransactionShow
 
 
@@ -67,16 +67,20 @@ class TransactionController extends AbstractController
      * @Route("/cryptoBuy", name="crypto_buy")
      */
     public function cryptoBuy(Request $request, ObjectManager $manager, CryptoRepository $cRepo, UserRepository $uRepo, WalletRepository $wRepo)
-    {       
+    {    
+        //Get buy === 1
+        $type = $request->get('type');
+        
+        //Get current user   
         $userId = $request->get('user');
         $user = $uRepo->find($userId);
         $credit = $user->getSolde();
         
+        //Get current crypto   
         $cryptoId = $request->get('crypto');
         $crypto = $cRepo->find($cryptoId);
-        
-        $type = $request->get('type');
 
+        //Get price of crypto transaction
         $amount = $request->get('amount');
         if( $amount <= 0 || $amount > $credit){
 
@@ -102,6 +106,7 @@ class TransactionController extends AbstractController
         $manager->persist($transaction);
         
         //wallet update
+        //get the curent user's wallet of current crypto
         $wallet = $wRepo->findOneBy(['user'=>$user, 'crypto'=>$crypto]);
 
         if(!$wallet){
@@ -111,11 +116,13 @@ class TransactionController extends AbstractController
                 'id' => $cryptoId,
                 ]);
         } else {
-            //buy
+            //buy :
+            //get last values in the wallet
             $walletAmount = $wallet->getAmount();
             $walletAmountCrypto = $wallet->getAmountCrypto();
-
+            //reduce user's solde
             $user ->setSolde($credit - $amount);
+            //increase wallet amount & crypto_amount
             $wallet 
                 ->setAmount($walletAmount + $amount)
                 ->setAmountCrypto($walletAmountCrypto + $amountCrypto)
@@ -124,7 +131,7 @@ class TransactionController extends AbstractController
         
         $manager->flush();
         
-        $this->addFlash('success', "Votre achat a bien été prise en compte. Votre compte Bitchest à été débité de $amount euros.");
+        $this->addFlash('success', "Votre achat a bien été pris en compte. Votre compte Bitchest à été débité de $amount euros.");
             
         $cryptos = $cRepo->findAll();
         return $this->redirectToRoute('user_transactions_show', [
@@ -138,16 +145,21 @@ class TransactionController extends AbstractController
      * @Route("/cryptoSell", name="crypto_sell")
      */
     public function cryptoSell(Request $request, ObjectManager $manager, CryptoRepository $cRepo, UserRepository $uRepo, WalletRepository $wRepo)
-    {       
+    {   
+        //get sell === 0    
         $type = $request->get('type');
 
+        //Get current user   
         $userId = $request->get('user');
         $user = $uRepo->find($userId);
         $credit = $user->getSolde();
         
+        //Get current crypto   
         $cryptoId = $request->get('crypto');
         $crypto = $cRepo->find($cryptoId);
         
+        //wallet
+        //get the curent user's wallet of current crypto
         $wallet = $wRepo->findOneBy(['user'=>$user, 'crypto'=>$crypto]);
 
         if(!$wallet){
@@ -157,9 +169,10 @@ class TransactionController extends AbstractController
                 'id' => $cryptoId,
                 ]);
         }
-    
+        //Get quantity of crypto (value in wallet)
         $amountCrypto = $wallet->getAmountCrypto();
         
+        //Get price of crypto (from the actual cours)
         $amount = $request->get('amount');
           
         if( $amount <= 0){   
@@ -184,14 +197,16 @@ class TransactionController extends AbstractController
         $manager->persist($transaction);
         
         //wallet update
+        //increase user's solde
         $user ->setSolde($credit + $amount);
+        //reset user's wallet
         $wallet 
             ->setAmount(0)
             ->setAmountCrypto(0)
             ;
         $manager->flush();
             
-        $this->addFlash('success', "Votre vente a bien été prise en compte. Votre compte Bitchest à été crédité de $amount euros.");
+        $this->addFlash('success', "Votre vente a bien été prise en compte. Votre compte Bitchest à été crédité de ". round($amount,2) ." euros.");
             
         $cryptos = $cRepo->findAll();
         return $this->redirectToRoute('user_transactions_show', [

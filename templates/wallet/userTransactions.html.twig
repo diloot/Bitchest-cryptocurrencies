@@ -29,6 +29,7 @@
                                             <div class="chart-note-wrap">
                                             {% for crypto in cryptos %}
                                                 <div class="chart-note mr-0 d-block">
+                                                    {#<span class="dot dot--{{crypto.Id  | slice(2, 1)}}"></span>#}
                                                     <span class="dot dot--{{crypto.Id}}"></span>
                                                     <a href="{{path('crypto_one', {'id':crypto.id})}}">
                                                     <span>{{crypto.name}}</span>
@@ -37,11 +38,17 @@
                                             {% endfor %}
                                             </div>
                                         </div>
+                                        {% if transactions is empty %}
+                                        <div class="col-xl-9">
+                                            <p class="pt-5 pl-5">Achetez des cryptomonnaies pour pouvoir comparer leurs quantités respectives.</p>
+                                        </div>
+                                        {% else %}
                                         <div class="col-xl-9">
                                             <div class="percent-chart">
                                                 <canvas id="percent-chart"></canvas>
                                             </div>
                                         </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -83,7 +90,10 @@
                                                             {% if (wallet.amountCrypto > 0) %}
                                                                 <button type="submit" class="btn btn-danger btn-sm">Vendre totalité</button>
                                                             {% else %}
+                                                                <a href="{{path('crypto_one', {'id':wallet.crypto.id})}}" class="btn btn-success btn-sm">Acheter</a>
+                                                                <!--
                                                                 <button type="submit" class="btn btn-outline-danger btn-sm" disabled>Vendre la totalité</button>
+                                                                -->
                                                             {% endif %}
                                                         </form>
                                                     </td>
@@ -114,6 +124,10 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% if transactions is empty %}
+                                <p>Le tableau est vide : vous n'avez pas encore effectué de transactions. </br> 
+                                Achetez des cryptomonnaies pour que les transactions apparaissent dans le tableau ci-dessous.</p>
+                                {% endif %}
                                 {% for transaction in transactions %}
                                 <tr>
                                     <td>

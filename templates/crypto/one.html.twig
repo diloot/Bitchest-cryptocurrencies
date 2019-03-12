@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %} {{ parent() }} {{crypto.name}} {% endblock %}
-{% block stylesheets %}{{parent()}}{% endblock %}
+{% block stylesheets %} {{parent()}} {% endblock %}
 {% block breadcrumb %}
     <li class="list-inline-item seprate"><span>/</span></li>
     <li class="list-inline-item"><a href="/">Cours cryptomonnaies</a></li>
@@ -18,7 +18,8 @@
             <div class="row m-t-25">
                 <div class="col-lg-3"><!--col left--> 
                     <!--CRYPTO - WEEK CART-->  
-                    <div class="overview-item overview-item--c{{crypto.id  | slice(2, 1)}} mb-2">
+                    {#<div class="overview-item overview-item--c{{crypto.id  | slice(2, 1)}} mb-2">#}
+                    <div class="overview-item overview-item--c{{crypto.id}} mb-2">
                         <div class="overview__inner">
                             <div class="overview-box clearfix"> 
                                 <div class="text text-white">
@@ -65,12 +66,12 @@
                                 <input type="hidden" name="user" id="user" value="{{app.user.id}}">
                                 <button type="submit" class="au-btn au-btn-icon au-btn--green my-3">Acheter</button>
                             {% else %}
-
-                            <p><small>Veuillez  <a href="{{path('login')}}">vous connecter</a> pour acheter. </br>
-                            Pas encore inscrit ?  <a href="{{path('security_registration')}}">S'enregistrer</a>.</small>
-                            </p>
-                            <button type="button" class="btn btn-outline-success my-3" disabled>Acheter</button>
+                                <p><small>Veuillez <a href="{{path('login')}}">vous connecter</a> pour acheter. </br>
+                                Pas encore inscrit ?  <a href="{{path('security_registration')}}">S'enregistrer</a>.</small>
+                                </p>
+                                <button type="button" class="btn btn-outline-secondary my-3" disabled>Acheter</button>
                             {% endif %}
+
                         </form>           
                     
                     <!--END BUYING FORM-->
@@ -89,6 +90,9 @@
                                 </div>
                                     
                                 <div class="chart-info__right">
+                                    <div>
+                                    <span>Progression sur la journée</span>
+                                    </div>
                                     {% for cotation in crypto.cotations %}
                                         {% if loop.index is same as (30) %}
                                             <div class="chart-statis">
@@ -233,12 +237,13 @@
 // monthChart  
         const bdcrypto = '#38ef7d'
         const bgcrypto = '#38ef7d5c'
-        //const bdcrypto2 = 'rgba(0,181,233,0.2)'
-        //const bgcrypto2 = 'rgba(0,173,95,0.2)'
         var data = [{% for cotation in crypto.cotations %}
                     {{ cotation.value}},
                     {% endfor %}]
-        //var data2 = [102, 70, 80, 100, 56, 53, 80, 75, 65, 90]
+        //For comparison
+        //const bdcrypto2 = 'rgba(0,181,233,0.2)'
+        //const bgcrypto2 = 'rgba(0,173,95,0.2)'
+        //var data2 = [10, 9, 10, 9, 10, 9]
     
         var ctx = document.getElementById("monthChart");
         if (ctx) {
@@ -258,7 +263,9 @@
                   pointHoverBackgroundColor: '#fff',
                   borderWidth: 0,
                   data: data
-                }/*,
+                }
+                //for comparison
+                /*,
                 {
                   label: 'My Second dataset',
                   backgroundColor: bgcrypto2,
@@ -291,7 +298,7 @@
                     beginAtZero: true,
                     maxTicksLimit: 5,
                     stepSize: 50,
-                    max: 150,
+                    max: 200,
                     fontFamily: "Poppins",
                     fontSize: 12
                   },

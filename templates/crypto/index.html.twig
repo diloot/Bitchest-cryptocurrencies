@@ -6,13 +6,14 @@
 {% block body %}
     <!-- STATISTIC-->
         <section class="statistic px-5 mt-0 pt-1">
-            <h3 class="text-uppercase mb-3">Cours des cryptomonnaies</h3>
+            <h3 class="text-uppercase mb-3">Cours du jour des cryptomonnaies</h3>
             <div class="row">
             <!--CRYPTOS - CARTS-->
                 {% for crypto in cryptos %}
                     <div class="col-6 col-sm-3">
                         <a href="{{path('crypto_one', {'id':crypto.id})}}">
-                            <div class="overview-item overview-item--c{{crypto.id | slice(2, 1)}}">
+                            {#<div class="overview-item overview-item--c{{crypto.id | slice(2, 1)}}">#}
+                            <div class="overview-item overview-item--c{{crypto.id}}">
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix"> 
                                         <div class="text text-white">
@@ -34,7 +35,7 @@
                                                         </div>
                                                     </div>
                                                 {% endif %}
-                                                {% endfor %}
+                                            {% endfor %}
                                             </p>
                                         </div>
                                     </div>
@@ -44,8 +45,8 @@
                     </div>             
                 {% endfor %}
             <!--END CRYPTOS - CARTS-->
-            <!--DOUGHNUT-->               
-                <div class="col-lg-6 mr-0 mb-2">
+            <!--BARCHART-->               
+                <div class="col-lg-6 mr-0 mb-5">
                     <div class="au-card">
                         <h3 class="title-2">Comparatif valeurs du jour en euros</h3>
                         <div class="row no-gutters">
@@ -53,23 +54,24 @@
                                 <div class="chart-note-wrap">
                                 {% for crypto in cryptos %}
                                     <div class="chart-note mr-0 d-block">
+                                        {#<span class="dot dot--{{crypto.Id  | slice(2, 1)}}"></span>#}
                                         <span class="dot dot--{{crypto.Id}}"></span>
                                         <a href="{{path('crypto_one', {'id':crypto.id})}}">
                                         <span>{{crypto.name}}</span>
-                                        </a>
+                                        </a><small> {{crypto.sigle}}</small>
                                     </div>
                                 {% endfor %}
                                 </div>
                             </div>
                             <div class="col-xl-9">
                                 <div class="percent-chart">
-                                    <canvas id="percent-chart"></canvas>
+                                    <canvas id="singleBarChart"></canvas>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            <!--END DOUGHNUT-->
+            <!--END BARCHART-->
             </div>
         </section>
     <!-- END STATISTIC-->
@@ -81,96 +83,88 @@
         // USE STRICT
         "use strict";
             try {
-// Percent Chart DOUGHNUT
-                var ctx = document.getElementById("percent-chart");
-                if (ctx) {
-                ctx.height = 280;
-                var myChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                    datasets: [
-                        {
-                        label: "Crypto",
-                        data: [
-                            {% for crypto in cryptos %}
-                                {% for cotation in crypto.cotations %}
-                                    {% if loop.index is same as (30) %}
-                                        {{cotation.value}},
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                        ],
-                        backgroundColor: [
-                            '#38ef7d',
-                            '#b8fc4b',
-                            '#dce35b',
-                            '#ff6a00',
-                            '#fa4251',
-                            '#ee0979',
-                            '#5a628a',
-                            '#3f5efb',
-                            '#11998e',
-                            '#68ecc4'
-                        ],
-                        hoverBackgroundColor: [
-                            '#38ef7d',
-                            '#b8fc4b',
-                            '#dce35b',
-                            '#ff6a00',
-                            '#fa4251',
-                            '#ee0979',
-                            '#5a628a',
-                            '#3f5efb',
-                            '#11998e',
-                            '#68ecc4'
-                        ],
-                        borderWidth: [
-                        ],
-                        hoverBorderColor: [
-                            '#38ef7d',
-                            '#b8fc4b',
-                            '#dce35b',
-                            '#ff6a00',
-                            '#fa4251',
-                            '#ee0979',
-                            '#5a628a',
-                            '#3f5efb',
-                            '#11998e',
-                            '#68ecc4'
-                        ]
-                        }
-                    ],
-                    labels: [
+// single bar chart
+            var ctx = document.getElementById("singleBarChart");
+            if (ctx) {
+            ctx.height = 230;
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                labels: [
+                    {% for crypto in cryptos %}
+                        '{{crypto.sigle}}',
+                    {% endfor %}
+                ],
+                datasets: [
+                    {
+                    label: "",
+                    data: [
                         {% for crypto in cryptos %}
-                        '{{crypto.name}}',
+                            {% for cotation in crypto.cotations %}
+                                {% if loop.index is same as (30) %}
+                                    {{cotation.value}},
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
+                        ],
+                    borderColor: [
+                        '#38ef7d',
+                        '#b8fc4b',
+                        '#dce35b',
+                        '#ff6a00',
+                        '#fa4251',
+                        '#ee0979',
+                        '#5a628a',
+                        '#3f5efb',
+                        '#11998e',
+                        '#68ecc4'
+                    ],
+                    borderWidth: "0",
+                    backgroundColor: [
+                        '#38ef7d',
+                        '#b8fc4b',
+                        '#dce35b',
+                        '#ff6a00',
+                        '#fa4251',
+                        '#ee0979',
+                        '#5a628a',
+                        '#3f5efb',
+                        '#11998e',
+                        '#68ecc4'
                     ]
-                    },
-                    options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    cutoutPercentage: 55,
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
-                    },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleFontFamily: "Poppins",
-                        xPadding: 15,
-                        yPadding: 10,
-                        caretPadding: 0,
-                        bodyFontSize: 16
                     }
+                ]
+                },
+                options: {
+                legend: {
+                    position: '',
+                    labels: {
+                    fontFamily: 'Poppins'
                     }
-                });
+
+                },
+                scales: {
+                    xAxes: [{
+                    ticks: {
+                        fontFamily: "Poppins"
+
+                    }
+                    }],
+                    yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontFamily: "Poppins"
+                    }
+                    }]
                 }
-            } catch (error) {
-                console.log(error);
+                }
+            });
             }
 
+        } catch (error) {
+            console.log(error);
+        }
+        /*------------*/
         })(jQuery);
     </script>  
 {% endblock %}

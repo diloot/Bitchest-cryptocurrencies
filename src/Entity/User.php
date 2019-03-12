@@ -72,7 +72,7 @@ class User implements UserInterface
     private $address;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", columnDefinition="INT(5) UNSIGNED ZEROFILL")
      * @Assert\Range (min=01000, max=99999, minMessage="Vous devez indiquer un code postal français.", maxMessage="Vous devez indiquer un code postal français.")
      */
     private $cp;
@@ -83,7 +83,7 @@ class User implements UserInterface
     private $town;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", columnDefinition="INT(10) UNSIGNED ZEROFILL")
      * @Assert\Range (min=100000000, max=999999999, minMessage="Vous devez indiquer un numéro de téléphone français.", maxMessage="Vous devez indiquer un numéro de téléphone français.")
      */
     private $phone;
